@@ -10,4 +10,4 @@ build:
 # the Redis server running on the host.
 .PHONY: run
 run: build
-	docker run --network=host --privileged --rm $(IMAGE):latest
+	docker run --network=host --privileged --rm $(IMAGE):latest -g "debug(write(file))"
