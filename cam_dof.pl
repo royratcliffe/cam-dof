@@ -66,10 +66,20 @@ create_cam_dof_thread :-
     ;   thread_create(cam_dof, _, [alias(cam), detached(true)])
     ).
 
+%! cam_dof is det.
+% Read the initial duty cycle from Redis and set the camera DOF to that duty
+% cycle. Then wait for messages on the cam thread's message queue. When a
+% message is received, update the camera DOF to the new duty cycle and update
+% the value in Redis. If there are multiple messages in the queue, only process
+% the most recent one and discard the rest. If there are no messages in the
+% queue for 1 second, disable the camera DOF and wait for the next message to
+% enable it again.
 cam_dof :-
     setting(cam:key, Key),
-    redis(default, get(Key:duty_cycle), DutyCycle),
-    cam_dof_(DutyCycle).
+    (   redis(default, get(Key:duty_cycle), DutyCycle)
+    ->  cam_dof_(DutyCycle)
+    ;   cam_dof____
+    ).
 
 cam_dof_(DutyCycle) :-
     dof_enable(cam),
@@ -86,7 +96,12 @@ cam_dof___(DutyCycle) :-
     (   thread_get_message(Self, DutyCycle1, [timeout(1)])
     ->  (   thread_peek_message(Self, _)
         ->  cam_dof___(DutyCycle)
-        ;   % Got a message and there are no more in the queue, so update the duty cycle and wait for the next message.
+        ;   % Got a message and there are no more in the queue, so
+            % update the duty cycle (if it differs) and wait for the next
+            % message. If the duty cycle is the same as the previous one, skip
+            % updating it and just wait for the next message. This is an
+            % optimisation to avoid unnecessary updates to the camera DOF when
+            % the duty cycle hasn't changed.
             (   DutyCycle == DutyCycle1
             ->  cam_dof___(DutyCycle1)
             ;   cam_dof__(DutyCycle1)
