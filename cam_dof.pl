@@ -74,6 +74,13 @@ create_cam_dof_thread :-
 % the most recent one and discard the rest. If there are no messages in the
 % queue for 1 second, disable the camera DOF and wait for the next message to
 % enable it again.
+%
+% The thread will terminate if its process does not have write access to the
+% sysfs PWM interface, which is required to control the camera DOF. In this
+% case, the thread will fail when it tries to enable the camera DOF or set its
+% duty cycle, and it will not be able to recover from this failure. To prevent
+% this, make sure that the container is run with --privileged and has access to
+% the host's /sys/class/pwm directory.
 cam_dof :-
     setting(cam:key, Key),
     (   redis(default, get(Key:duty_cycle), DutyCycle)
