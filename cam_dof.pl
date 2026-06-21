@@ -11,9 +11,9 @@
 
 dof(cam, 'pca9685-pwm', 11, 0.1, 0.3).
 
-xgroup_cam_dof_create :- xgroup_cam_dof_create(default).
+create_cam_dof_xgroup :- create_cam_dof_xgroup(default).
 
-xgroup_cam_dof_create(Redis) :-
+create_cam_dof_xgroup(Redis) :-
     setting(cam:key, Key),
     setting(cam:group, Group),
     xgroup_create(Redis, Key, Group, [id($), mkstream(true)]).
