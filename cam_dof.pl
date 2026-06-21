@@ -9,9 +9,20 @@
 :- use_module(library(redis_streams)).
 :- use_module(library(settings)).
 
+:- setting(rediscli_host, atom, env('REDISCLI_HOST', localhost), 'Host of the Redis server').
+:- setting(rediscli_port, integer, env('REDISCLI_PORT', 6379), 'Port of the Redis server').
+
+% Connect to Redis server at Host:Port with version 3 compatibility.
+% This assumes the Redis server is running on the specified port.
+redis_server :-
+    setting(rediscli_host, Host),
+    setting(rediscli_port, Port),
+    redis_server(default, Host:Port, [version(3)]).
+
 :- initialization(main, main).
 
 main :-
+    redis_server,
     create_cam_dof_thread,
     create_cam_dof_xgroup,
     listen_to_cam_dof,
