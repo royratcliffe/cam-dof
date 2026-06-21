@@ -23,5 +23,5 @@ pwm_enable(Chip, Export, Enable) :-
 % @arg DutyCycle The duty cycle to set (a value between 0 and 1).
 pwm_duty_cycle(Chip, Export, DutyCycle) :-
     sysfs_pwm_read(period, Chip, Export, Period),
-    clamp(round(DutyCycle * Period), 0, Period - 1, DutyCycle1),
+    clamp(0, Period - 1, round(DutyCycle * Period), DutyCycle1),
     sysfs_pwm_write(duty_cycle, Chip, Export, DutyCycle1).
