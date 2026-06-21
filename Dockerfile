@@ -7,4 +7,4 @@ WORKDIR /srv
 # Quietly compile the Prolog files and remove the source files to save
 # space; the compiled files will be used at runtime.
 RUN for pl in *.pl; do swipl -q -t "qcompile('$pl')"; done; rm *.pl
-ENTRYPOINT ["swipl", "-s", "cam_dof", "--"]
+ENTRYPOINT ["swipl", "-s", "cam_dof"]
