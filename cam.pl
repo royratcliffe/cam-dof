@@ -7,5 +7,5 @@
 :- setting(group, atom, dof,
     'Redis consumer group for camera DOF events').
 
-:- setting(consumer, atom, env('HOSTNAME'),
+:- setting(consumer, atom, env('HOSTNAME', dof),
     'Name to use for consuming camera DOF events').
