@@ -9,6 +9,14 @@
 :- use_module(library(redis_streams)).
 :- use_module(library(settings)).
 
+:- initialization(main, main).
+
+main :-
+    create_cam_dof_thread,
+    create_cam_dof_xgroup,
+    listen_to_cam_dof,
+    xlisten_cam_dof_group.
+
 dof(cam, 'pca9685-pwm', 11, 0.1, 0.3).
 
 create_cam_dof_xgroup :- create_cam_dof_xgroup(default).
