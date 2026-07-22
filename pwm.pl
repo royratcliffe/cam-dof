@@ -53,3 +53,21 @@ pwm_duty_cycle(Chip, Export, DutyCycle) :-
     sysfs_pwm_read(period, Chip, Export, Period),
     clamp(0, Period - 1, round(DutyCycle * Period), DutyCycle1),
     sysfs_pwm_write(duty_cycle, Chip, Export, DutyCycle1).
+
+:- table device_name_of_pwmchip/2.
+
+%! device_name_of_pwmchip(DeviceName, Chip) is semidet.
+%
+% Find the PWM chip that corresponds to the given device name. For example, to
+% find the chip for the PCA9685 PWM controller, you would call
+% device_name_of_pwmchip('pca9685-pwm', Chip), which would unify Chip with the
+% appropriate value for the PCA9685 PWM controller.
+%
+% The predicate is semidet, meaning it will succeed at most once. If there is a
+% chip with the specified device name, it will unify Chip with that chip. If
+% there is no chip with the specified device name, the predicate will fail. If
+% there is more than one chip with the specified device name, the predicate will
+% succeed with the first one it finds, and will not backtrack to find additional
+% chips.
+device_name_of_pwmchip(DeviceName, Chip) :-
+    once(sysfs_pwmchip_read(device/name, Chip, DeviceName)).
