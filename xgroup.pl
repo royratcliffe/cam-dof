@@ -75,7 +75,7 @@ catching `BUSYGROUP` errors.
 %
 %       - id(Id) specifies the ID for the consumer group.
 %         Defaults to '$' (the latest entry in the stream).
-%       - mk_stream(true) specifies that the stream should be created
+%       - make_stream(true) specifies that the stream should be created
 %         if it does not already exist.
 %       - entries_read(EntriesRead) specifies the number of entries to read
 %         when the group is created.
@@ -94,7 +94,7 @@ xgroup_create(Redis, Key, Group, Options) :-
     %
     %   XGROUP CREATE key group id|$ [MKSTREAM] [ENTRIESREAD entries-read]
     %
-    (   option(mk_stream(true), Options)
+    (   option(make_stream(true), Options)
     ->  Options1 = [mkstream]
     ;   Options1 = []
     ),
