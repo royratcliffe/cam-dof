@@ -1,6 +1,7 @@
 FROM alpine:latest
 RUN apk --no-cache add swi-prolog --repository=https://dl-cdn.alpinelinux.org/alpine/edge/testing --repository=https://dl-cdn.alpinelinux.org/alpine/edge/main
 RUN swipl pack install --global -y --branch patch-1 https://github.com/royratcliffe/sysfs.git \
+ && swipl pack install --global -y --branch threaded-throttle https://github.com/royratcliffe/canny_tudor.git \
  && rm -rf /usr/local/share/swi-prolog/pack/Downloads/*
 COPY *.pl /srv/
 WORKDIR /srv
