@@ -35,8 +35,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 Wraps Redis's `XGROUP CREATE` command with `xgroup_create/3` and
 `xgroup_create/4`. Translates Prolog options into Redis command arguments,
-extracts stream `id/1` (default `$`), handles `mkstream(true)` and
-`entriesread/1`, and captures optional reply. Behaves idempotently by
+extracts stream `id/1` (default `$`), handles `mk_stream(true)` and
+`entries_read/1`, and captures optional reply. Behaves idempotently by
 catching `BUSYGROUP` errors.
 
 */
@@ -75,9 +75,9 @@ catching `BUSYGROUP` errors.
 %
 %       - id(Id) specifies the ID for the consumer group.
 %         Defaults to '$' (the latest entry in the stream).
-%       - mkstream(true) specifies that the stream should be created
+%       - mk_stream(true) specifies that the stream should be created
 %         if it does not already exist.
-%       - entriesread(EntriesRead) specifies the number of entries to read
+%       - entries_read(EntriesRead) specifies the number of entries to read
 %         when the group is created.
 %       - reply(Reply) specifies a variable to unify with the command's reply.
 %         If not provided, the reply is ignored.
@@ -94,11 +94,11 @@ xgroup_create(Redis, Key, Group, Options) :-
     %
     %   XGROUP CREATE key group id|$ [MKSTREAM] [ENTRIESREAD entries-read]
     %
-    (   option(mkstream(true), Options)
+    (   option(mk_stream(true), Options)
     ->  Options1 = [mkstream]
     ;   Options1 = []
     ),
-    (   option(entriesread(EntriesRead), Options)
+    (   option(entries_read(EntriesRead), Options)
     ->  Options2 = [entriesread, EntriesRead|Options1]
     ;   Options2 = Options1
     ),
