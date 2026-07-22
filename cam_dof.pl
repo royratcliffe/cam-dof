@@ -63,7 +63,7 @@ create_cam_dof_xgroup :- create_cam_dof_xgroup(default).
 create_cam_dof_xgroup(Redis) :-
     setting(cam:key, Key),
     setting(cam:group, Group),
-    xgroup_create(Redis, Key, Group, [id($), mkstream(true)]).
+    xgroup_create(Redis, Key, Group, [id($), make_stream(true)]).
 
 xlisten_cam_dof_group :- xlisten_cam_dof_group(default).
 
